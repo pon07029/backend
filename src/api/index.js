@@ -15,7 +15,7 @@ import swimming from './swimming';
 import taekwondo from './taekwondo';
 import tennis from './tennis';
 import yoga from './yoga';
-
+import survey from './survey';
 
 const api = new Router();
 
@@ -36,6 +36,7 @@ api.use('/taekwondo', taekwondo.routes());
 api.use('/tennis', tennis.routes());
 api.use('/yoga', yoga.routes());
 
+api.use('/survey', survey.routes());
 
 
 
