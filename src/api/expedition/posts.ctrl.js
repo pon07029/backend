@@ -1,4 +1,4 @@
-import Taekwondo from '../../models/taekwondo';
+import Expedition from '../../models/expedition';
 import mongoose from 'mongoose';
 import Joi from 'joi';
 
@@ -15,34 +15,35 @@ export const checkObjectId = (ctx, next) => {
 /*
   POST /api/posts
   {
-    title: '제목',
-    body: '내용',
-    tags: ['태그1', '태그2']
+    name: '이름',
+    sex: '성',
+    phone: '전화번호',
+    class: '수업명'
   }
 */
 export const write = async ctx => {
   const schema = Joi.object().keys({
     // 객체가 다음 필드를 가지고 있음을 검증
-    title: Joi.string().required(), // required() 가 있으면 필수 항목
-    body: Joi.string().required(),
-    tags: Joi.array()
-      .items(Joi.string())
-      .required(), // 문자열로 이루어진 배열
+    name: Joi.string().required(), // required() 가 있으면 필수 항목
+    sex: Joi.string().required(),
+    phone: Joi.string().required(),
+    className: Joi.string().required(),
   });
 
   // 검증 후, 검증 실패시 에러처리
-  const result = Joi.validate(ctx.request.body, schema);
+  const result = schema.validate(ctx.request.body);
   if (result.error) {
     ctx.status = 400; // Bad Request
     ctx.body = result.error;
     return;
   }
 
-  const { title, body, tags } = ctx.request.body;
-  const post = new Taekwondo({
-    title,
-    body,
-    tags,
+  const { name, sex, phone, className } = ctx.request.body;
+  const post = new Expedition({
+    name,
+    sex,
+    phone,
+    className
   });
   try {
     await post.save();
@@ -61,10 +62,10 @@ export const list = async ctx => {
   try {
     var posts;
     if ( lat && lon){
-      posts = await Taekwondo.find({"lat": lat, "lon":lon}).exec();
+      posts = await Expedition.find({"lat": lat, "lon":lon}).exec();
     }
     else {
-      posts = await Taekwondo.find().exec();
+      posts = await Expedition.find().exec();
     }
     ctx.body = posts;
   } catch (e) {
@@ -78,7 +79,7 @@ export const list = async ctx => {
 export const read = async ctx => {
   const { name } = ctx.params;
   try {
-    const post = await Taekwondo.find({"name": name}).exec();
+    const post = await Expedition.find({"name": name}).exec();
     if (!post) {
       ctx.status = 404; // Not Found
       return;
@@ -95,7 +96,7 @@ export const read = async ctx => {
 export const remove = async ctx => {
   const { id } = ctx.params;
   try {
-    await Taekwondo.findByIdAndRemove(id).exec();
+    await Expedition.findByIdAndRemove(id).exec();
     ctx.status = 204; // No Content (성공은 했지만 응답할 데이터는 없음)
   } catch (e) {
     ctx.throw(500, e);
@@ -126,7 +127,7 @@ export const update = async ctx => {
   }
  
   try {
-    const post = await Taekwondo.findByIdAndUpdate(id, ctx.request.body, {
+    const post = await Expedition.findByIdAndUpdate(id, ctx.request.body, {
       new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
       // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
     }).exec();

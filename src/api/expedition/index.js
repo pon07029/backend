@@ -1,12 +1,12 @@
 import Router from 'koa-router';
 import * as postsCtrl from './posts.ctrl';
 
-const tennis = new Router();
+const expedition = new Router();
 
-tennis.get('/', postsCtrl.list);
-tennis.get('/:name', postsCtrl.read);
-tennis.patch('/:id', postsCtrl.update);
-
+expedition.get('/', postsCtrl.list);
+expedition.get('/:name', postsCtrl.read);
+expedition.patch('/:id', postsCtrl.update);
+expedition.post('/', postsCtrl.write);
 
 
 // posts.post('/', postsCtrl.write);
@@ -17,4 +17,4 @@ tennis.patch('/:id', postsCtrl.update);
 
 // health.use('/:id', post.routes());
 
-export default tennis;
+export default expedition;

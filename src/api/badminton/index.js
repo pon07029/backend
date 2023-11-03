@@ -1,11 +1,11 @@
 import Router from 'koa-router';
-import * as postsCtrl from './posts.ctrl';
+import * as badmintonCtrl from './badminton.ctrl';
 
 const badminton = new Router();
 
-badminton.get('/', postsCtrl.list);
-badminton.get('/:name', postsCtrl.read);
-badminton.patch('/:id', postsCtrl.update);
+badminton.get('/', badmintonCtrl.list);
+badminton.get('/:name', badmintonCtrl.read);
+badminton.patch('/:id', badmintonCtrl.update);
 
 
 

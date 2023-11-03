@@ -1,11 +1,10 @@
-import Taekwondo from '../../models/taekwondo';
+import Badminton from '../../models/badminton';
 import mongoose from 'mongoose';
 import Joi from 'joi';
 
 const { ObjectId } = mongoose.Types
 export const checkObjectId = (ctx, next) => {
   const { id } = ctx.params;
-  console.log(id)
   if (!ObjectId.isValid(id)) {
     ctx.status = 400; // Bad Request
     return;
@@ -13,7 +12,7 @@ export const checkObjectId = (ctx, next) => {
   return next();
 };
 /*
-  POST /api/posts
+  POST /api/badminton
   {
     title: '제목',
     body: '내용',
@@ -39,7 +38,7 @@ export const write = async ctx => {
   }
 
   const { title, body, tags } = ctx.request.body;
-  const post = new Taekwondo({
+  const post = new Badminton({
     title,
     body,
     tags,
@@ -52,19 +51,20 @@ export const write = async ctx => {
   }
 };
 
+
+//------
 /*
-  GET /api/posts
+  GET /api/badminton
 */
 export const list = async ctx => {
   const { lat, lon } = ctx.query;
-
   try {
     var posts;
     if ( lat && lon){
-      posts = await Taekwondo.find({"lat": lat, "lon":lon}).exec();
+      posts = await Badminton.find({"lat": lat, "lon":lon}).exec();
     }
     else {
-      posts = await Taekwondo.find().exec();
+      posts = await Badminton.find().exec();
     }
     ctx.body = posts;
   } catch (e) {
@@ -73,12 +73,12 @@ export const list = async ctx => {
 };
 
 /*
-  GET /api/posts/:name
+  GET /api/badminton/:name
 */
 export const read = async ctx => {
   const { name } = ctx.params;
   try {
-    const post = await Taekwondo.find({"name": name}).exec();
+    const post = await Badminton.find({"name": name}).exec();
     if (!post) {
       ctx.status = 404; // Not Found
       return;
@@ -90,12 +90,12 @@ export const read = async ctx => {
 };
 
 /*
-  DELETE /api/posts/:id
+  DELETE /api/badminton/:id
 */
 export const remove = async ctx => {
   const { id } = ctx.params;
   try {
-    await Taekwondo.findByIdAndRemove(id).exec();
+    await Badminton.findByIdAndRemove(id).exec();
     ctx.status = 204; // No Content (성공은 했지만 응답할 데이터는 없음)
   } catch (e) {
     ctx.throw(500, e);
@@ -103,7 +103,7 @@ export const remove = async ctx => {
 };
 
 /*
-  PATCH /api/posts/:id
+  PATCH /api/badminton/:id
   {
     click: '수정'
     good: '수정'
@@ -112,21 +112,28 @@ export const remove = async ctx => {
 export const update = async ctx => {
   const { id } = ctx.params;
   // write 에서 사용한 schema 와 비슷한데, required() 가 없습니다.
+  
   const schema = Joi.object().keys({
     click: Joi.number(),
     good: Joi.number(),
+    serviceInfo: Joi.number().integer(),
+    lessonInfo: Joi.array().items(Joi.array().items(Joi.array().items(Joi.number()))),
+    openDateInfo: Joi.array().items(Joi.array().items(Joi.number())),
+    additionalFacInfo : Joi.number(),
+    environInfo : Joi.number(),
   });
-
+ 
   // 검증 후, 검증 실패시 에러처리
   const result = schema.validate(ctx.request.body);
   if (result.error) {
+    console.log('Yeah')
     ctx.status = 400; // Bad Request
     ctx.body = result.error;
     return;
   }
- 
+  console.log(ctx.request.body);
   try {
-    const post = await Taekwondo.findByIdAndUpdate(id, ctx.request.body, {
+    const post = await Badminton.findByIdAndUpdate(id, ctx.request.body, {
       new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
       // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
     }).exec();

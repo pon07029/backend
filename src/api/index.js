@@ -17,7 +17,11 @@ import tennis from './tennis';
 import yoga from './yoga';
 import survey from './survey';
 
+import expedition from './expedition';
+
 const api = new Router();
+
+// api.get()
 
 api.use('/badminton', badminton.routes());
 api.use('/ballet', ballet.routes());
@@ -38,6 +42,8 @@ api.use('/yoga', yoga.routes());
 
 api.use('/survey', survey.routes());
 
+
+api.use('/expedition', expedition.routes());
 
 
 // 라우터를 내보냅니다.

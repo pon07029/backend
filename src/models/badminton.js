@@ -12,7 +12,13 @@ const AllSchema = new Schema({
   lat: Number,
   lon: Number,
   click: Number,
-  good: Number
+  good: Number,
+  serviceInfo: Number,
+  lessonInfo : Array,
+  openDateInfo: Array,
+  additionalFacInfo: Number,
+  environInfo: Number,
+  
 }, {collection: 'badminton'});
 
 const Badminton = mongoose.model('badminton', AllSchema);
